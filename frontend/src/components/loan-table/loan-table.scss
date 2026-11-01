@@ -1,0 +1,58 @@
+$header: #4a7bab;
+$header-border: #fff;
+$border: #c9ced6;
+$row-alt: #f4f6f9;
+
+.loan-table {
+  margin: 16px;
+  max-height: 500px;
+  overflow: auto;
+  border: 1px solid $border;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  th {
+    position: sticky;
+    padding: 4px 8px;
+    font-weight: normal;
+    color: #fff;
+    background: $header;
+    white-space: nowrap;
+  }
+
+  thead tr:first-child th {
+    top: 0;
+    height: 24px;
+  }
+
+  thead tr:last-child th {
+    top: 24px;
+  }
+
+  td {
+    padding: 6px 8px;
+    text-align: right;
+    border-bottom: 1px solid $border;
+    white-space: nowrap;
+  }
+
+  tbody tr:nth-child(even) {
+    background: $row-alt;
+  }
+
+  &_center {
+    text-align: center !important;
+  }
+
+  &_group-start {
+    border-left: 1px solid $border;
+  }
+
+  th.loan-table_group-start {
+    border-left-color: $header-border;
+  }
+}

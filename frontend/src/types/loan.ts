@@ -28,5 +28,5 @@ export interface LoanInstallment {
 }
 
 export interface LoanCalculatorResponse {
-    loanInstallments: LoanInstallment[]
+    LoanInstallments: LoanInstallment[]
 }
