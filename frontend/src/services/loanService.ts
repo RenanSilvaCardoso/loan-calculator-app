@@ -7,14 +7,21 @@ export async function calculateLoan(values: LoanFormValues): Promise<LoanCalcula
         interestRatePercent: Number(values.interestRatePercent),
     }
 
-    const response = await fetch('/api/calculator/calculate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-    })
+    let response: Response
+    try {
+        response = await fetch('/api/calculator/calculate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(request),
+        })
+    } catch {
+        throw new Error('Não foi possível conectar ao servidor. Tente novamente.')
+    }
 
     if (!response.ok) {
-        throw new Error('Erro ao calcular o empréstimo')
+        const body = await response.json().catch(() => null)
+        const message = Array.isArray(body?.errors) ? body.errors.join(' ') : ''
+        throw new Error(message || 'Erro ao calcular o empréstimo.')
     }
 
     return response.json()

@@ -14,14 +14,14 @@ public record LoanCalculatorRequest(
         @NotNull @Positive BigDecimal loanAmount,
         @NotNull @Positive BigDecimal interestRatePercent
 ) {
-    @AssertTrue(message = "The end date must be after than the start date")
+    @AssertTrue(message = "A data final deve ser maior que a data inicial.")
     public boolean isFinalDateAfterInitialDate() {
         if (initialDate == null || finalDate == null) return true;
 
         return finalDate.isAfter(initialDate);
     }
 
-    @AssertTrue(message = "The first payment date must be between initial date and final date")
+    @AssertTrue(message = "O primeiro pagamento deve estar entre a data inicial e a final.")
     public boolean isFirstPaymentDateWithinRange() {
         if (initialDate == null || finalDate == null || firstPaymentDate == null) return true;
 

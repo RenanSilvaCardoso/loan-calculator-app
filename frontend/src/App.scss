@@ -1,3 +1,12 @@
 h1 {
   margin: 16px;
 }
+
+.app__error {
+  margin: 0 16px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #c62828;
+  background: #fdecea;
+  border-left: 4px solid #c62828;
+}

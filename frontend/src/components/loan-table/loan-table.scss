@@ -44,15 +44,15 @@ $row-alt: #f4f6f9;
     background: $row-alt;
   }
 
-  &_center {
+  &__center {
     text-align: center !important;
   }
 
-  &_group-start {
+  &__group-start {
     border-left: 1px solid $border;
   }
 
-  th.loan-table_group-start {
+  th.loan-table__group-start {
     border-left-color: $header-border;
   }
 }

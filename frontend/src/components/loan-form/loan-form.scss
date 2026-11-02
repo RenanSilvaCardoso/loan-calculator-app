@@ -9,7 +9,7 @@ $error: #c62828;
   gap: 16px;
   padding: 16px;
 
-  &_field {
+  &__field {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -26,6 +26,10 @@ $error: #c62828;
       padding: 0 8px;
       border: 1px solid $border;
       border-radius: 4px;
+
+      &[aria-invalid='true'] {
+        border-color: $error;
+      }
     }
   }
 
@@ -44,7 +48,7 @@ $error: #c62828;
     }
   }
 
-  &_error {
+  &__error {
     width: 100%;
     margin: 0;
     font-size: 0.8rem;

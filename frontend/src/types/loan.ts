@@ -14,7 +14,7 @@ export interface LoanCalculatorRequest {
     interestRatePercent: number
 }
 
-export interface LoanInstallment {
+export interface LoanScheduleRow {
     competenceDate: string
     loanAmount: number
     outstandingBalance: number
@@ -28,5 +28,5 @@ export interface LoanInstallment {
 }
 
 export interface LoanCalculatorResponse {
-    LoanInstallments: LoanInstallment[]
+    LoanScheduleRows: LoanScheduleRow[]
 }

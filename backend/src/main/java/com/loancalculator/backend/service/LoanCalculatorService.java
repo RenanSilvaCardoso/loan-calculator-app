@@ -2,7 +2,7 @@ package com.loancalculator.backend.service;
 
 import com.loancalculator.backend.dto.LoanCalculatorRequest;
 import com.loancalculator.backend.dto.LoanCalculatorResponse;
-import com.loancalculator.backend.dto.LoanInstallment;
+import com.loancalculator.backend.dto.LoanScheduleRow;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,7 +11,11 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 public class LoanCalculatorService {
@@ -19,10 +23,16 @@ public class LoanCalculatorService {
     private static final int BASE_DAYS = 360;
     private static final MathContext MC = MathContext.DECIMAL64;
 
+    private final BusinessDayCalendar businessDayCalendar;
+
+    public LoanCalculatorService(BusinessDayCalendar businessDayCalendar) {
+        this.businessDayCalendar = businessDayCalendar;
+    }
+
     public LoanCalculatorResponse calculate(LoanCalculatorRequest request){
         List<LocalDate> paymentDates = buildPaymentDates(request);
         List<LocalDate> scheduleDates = buildScheduleDates(request, paymentDates);
-        List<LoanInstallment> installmentRows = buildRows(request, scheduleDates, paymentDates);
+        List<LoanScheduleRow> installmentRows = buildRows(request, scheduleDates, paymentDates);
 
         return new LoanCalculatorResponse(installmentRows);
     }
@@ -32,10 +42,13 @@ public class LoanCalculatorService {
         LocalDate firstPayment = request.firstPaymentDate();
         LocalDate finalDate = request.finalDate();
 
-        LocalDate date = firstPayment;
-        for (int i = 1; date.isBefore(request.finalDate()); i++){
-            paymentDates.add(date);
-            date = firstPayment.plusMonths(i);
+        LocalDate baseDate = firstPayment;
+        for (int i = 1; baseDate.isBefore(finalDate); i++) {
+            LocalDate paymentDate = businessDayCalendar.nextBusinessDay(baseDate);
+            if (paymentDate.isBefore(finalDate)) {
+                paymentDates.add(paymentDate);
+            }
+            baseDate = firstPayment.plusMonths(i);
         }
 
         paymentDates.add(finalDate);
@@ -62,10 +75,10 @@ public class LoanCalculatorService {
         return new ArrayList<>(dates);
     }
 
-    private List<LoanInstallment> buildRows(LoanCalculatorRequest request,
+    private List<LoanScheduleRow> buildRows(LoanCalculatorRequest request,
                                             List<LocalDate> scheduleDates,
                                             List<LocalDate> paymentDates) {
-        List<LoanInstallment> installmentRows = new ArrayList<>();
+        List<LoanScheduleRow> installmentRows = new ArrayList<>();
 
         BigDecimal loanAmount = request.loanAmount();
         double annualRate = request.interestRatePercent().doubleValue() / 100;
@@ -110,10 +123,10 @@ public class LoanCalculatorService {
         return installmentRows;
     }
 
-    private LoanInstallment toRow(LocalDate date, BigDecimal loanAmount, String consolidated,
+    private LoanScheduleRow toRow(LocalDate date, BigDecimal loanAmount, String consolidated,
                                   BigDecimal total, BigDecimal amortization, BigDecimal principalBalance,
                                   BigDecimal provision, BigDecimal accumulatedInterest, BigDecimal paidInterest) {
-        return new LoanInstallment(
+        return new LoanScheduleRow(
                 date,
                 round(loanAmount),
                 round(principalBalance.add(accumulatedInterest)),

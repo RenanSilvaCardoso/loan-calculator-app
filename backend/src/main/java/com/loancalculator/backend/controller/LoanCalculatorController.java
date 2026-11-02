@@ -19,7 +19,7 @@ public class LoanCalculatorController {
         this.loanCalculatorService = loanCalculatorService;
     }
 
-    @PostMapping("/calculate") //LoanCalculatorResponse
+    @PostMapping("/calculate")
     public LoanCalculatorResponse calculate(@Valid @RequestBody LoanCalculatorRequest request){
 
         return loanCalculatorService.calculate(request);

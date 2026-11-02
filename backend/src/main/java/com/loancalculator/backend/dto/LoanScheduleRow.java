@@ -3,7 +3,7 @@ package com.loancalculator.backend.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record LoanInstallment(
+public record LoanScheduleRow(
         LocalDate competenceDate,
         BigDecimal loanAmount,
         BigDecimal outstandingBalance,
